@@ -1,0 +1,42 @@
+// Custom styles for Forever E-Commerce Admin
+
+.order-card {
+  color: #fff;
+  
+  i {
+    font-size: 26px;
+    opacity: 0.5;
+  }
+  
+  h6 {
+    font-size: 14px;
+    margin-bottom: 15px;
+    opacity: 0.8;
+  }
+  
+  h2 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 0;
+    
+    span {
+      font-size: 28px;
+    }
+  }
+}
+
+.bg-c-blue {
+  background: linear-gradient(45deg, #4099ff, #73b4ff);
+}
+
+.bg-c-green {
+  background: linear-gradient(45deg, #2ed8b6, #59e0c5);
+}
+
+.bg-c-yellow {
+  background: linear-gradient(45deg, #FFB64D, #ffcb80);
+}
+
+.bg-c-red {
+  background: linear-gradient(45deg, #FF5370, #ff869a);
+}

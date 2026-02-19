@@ -1,0 +1,53 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+
+# Sensitive files
+*.pem
+*.key
+*.cert
+*.crt
+config/secrets.js
+
+# Dependencies
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+dist/
+build/
+
+# Uploads
+uploads/
+
+# Backups
+backups/
+*.backup
+*.bak
+
+# Invoices
+invoices/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
