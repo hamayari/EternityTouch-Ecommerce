@@ -37,3 +37,14 @@ invoices/
 # Temporary files
 *.tmp
 *.temp
+
+# Test files with potential secrets
+test-*.js
+send-test-*.js
+setup-*.js
+
+# Documentation with sensitive info
+EMAIL_SETUP.md
+SECURITY_CHECKLIST.txt
+DEPLOYMENT_GUIDE.md
+QUICK_START_DEPLOYMENT.md
