@@ -4,11 +4,11 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'backend/**'
+      - 'forever/backend/**'
   pull_request:
     branches: [main, develop]
     paths:
-      - 'backend/**'
+      - 'forever/backend/**'
 
 jobs:
   test:
@@ -24,18 +24,18 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: forever/backend/package-lock.json
       
       - name: Install dependencies
-        working-directory: backend
+        working-directory: forever/backend
         run: npm ci
       
       - name: Run linter
-        working-directory: backend
+        working-directory: forever/backend
         run: npm run lint --if-present || echo "No lint script"
       
       - name: Run tests
-        working-directory: backend
+        working-directory: forever/backend
         run: npm test --if-present || echo "No tests configured"
         env:
           NODE_ENV: test
@@ -43,7 +43,7 @@ jobs:
           JWT_SECRET: test_secret_key_for_ci_pipeline_only
       
       - name: Security audit
-        working-directory: backend
+        working-directory: forever/backend
         run: npm audit --audit-level=high || true
 
   deploy-staging:

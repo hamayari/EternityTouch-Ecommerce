@@ -4,11 +4,11 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'admin/**'
+      - 'forever/admin/**'
   pull_request:
     branches: [main, develop]
     paths:
-      - 'admin/**'
+      - 'forever/admin/**'
 
 jobs:
   test:
@@ -24,24 +24,24 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: admin/package-lock.json
+          cache-dependency-path: forever/admin/package-lock.json
       
       - name: Install dependencies
-        working-directory: admin
+        working-directory: forever/admin
         run: npm ci
       
       - name: Run linter
-        working-directory: admin
+        working-directory: forever/admin
         run: npm run lint --if-present || echo "No lint script"
       
       - name: Build
-        working-directory: admin
+        working-directory: forever/admin
         run: npm run build
         env:
           VITE_BACKEND_URL: https://eternity-touch-ecommerce.onrender.com
       
       - name: Security audit
-        working-directory: admin
+        working-directory: forever/admin
         run: npm audit --audit-level=high || true
 
   deploy-staging:
