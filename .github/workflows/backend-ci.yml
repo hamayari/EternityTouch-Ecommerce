@@ -126,7 +126,6 @@ jobs:
       - name: Check for hardcoded secrets
         run: |
           echo "🔐 Checking for hardcoded secrets..."
-          # Check for common secret patterns
           if grep -r -E "(password|secret|api_key|token)\s*=\s*['\"][^'\"]+['\"]" backend/ --exclude-dir=node_modules --exclude-dir=coverage || true; then
             echo "⚠️ Potential secrets found - please review"
           else
@@ -149,7 +148,6 @@ jobs:
     name: Build Docker Image
     runs-on: ubuntu-latest
     needs: [code-quality, security-scan]
-    if: github.event_name == 'push'
     
     steps:
       - name: Checkout code
@@ -190,7 +188,7 @@ jobs:
   deploy-staging:
     name: Deploy to Staging
     needs: build-docker
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     environment:
       name: staging
@@ -216,7 +214,7 @@ jobs:
   deploy-production:
     name: Deploy to Production
     needs: build-docker
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: production
