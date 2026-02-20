@@ -1,0 +1,12 @@
+name: Test Simple
+
+on:
+  push:
+    branches: [feature/test-pipeline]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo test
+        run: echo "Workflow is working!"
