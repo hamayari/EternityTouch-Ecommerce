@@ -2,7 +2,7 @@ name: Admin CI/CD
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, feature/test-pipeline]
     paths:
       - 'forever/admin/**'
   pull_request:
