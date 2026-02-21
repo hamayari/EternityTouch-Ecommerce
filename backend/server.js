@@ -55,13 +55,33 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // CORS configuration
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    process.env.FRONTEND_URL,
+    process.env.ADMIN_URL,
+    /https:\/\/.*\.vercel\.app$/ // Allow all Vercel preview deployments
+].filter(Boolean);
+
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://localhost:5174',
-        process.env.FRONTEND_URL,
-        process.env.ADMIN_URL
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, Postman, etc.)
+        if (!origin) return callback(null, true);
+        
+        // Check if origin matches allowed origins or patterns
+        const isAllowed = allowedOrigins.some(allowed => {
+            if (allowed instanceof RegExp) {
+                return allowed.test(origin);
+            }
+            return allowed === origin;
+        });
+        
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
@@ -141,12 +161,30 @@ const httpServer = createServer(app);
 // Initialize Socket.IO for real-time chat
 const io = new Server(httpServer, {
     cors: {
-        origin: [
-            'http://localhost:5173',
-            'http://localhost:5174',
-            process.env.FRONTEND_URL,
-            process.env.ADMIN_URL
-        ].filter(Boolean),
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+            
+            const allowedOrigins = [
+                'http://localhost:5173',
+                'http://localhost:5174',
+                process.env.FRONTEND_URL,
+                process.env.ADMIN_URL,
+                /https:\/\/.*\.vercel\.app$/ // Allow all Vercel preview deployments
+            ].filter(Boolean);
+            
+            const isAllowed = allowedOrigins.some(allowed => {
+                if (allowed instanceof RegExp) {
+                    return allowed.test(origin);
+                }
+                return allowed === origin;
+            });
+            
+            if (isAllowed) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true
     }
 });
