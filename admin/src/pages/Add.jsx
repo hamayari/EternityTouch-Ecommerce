@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { assets } from '../assets/assets';
 import axios from 'axios';
 import { backendUrl } from '../App';
 import { toast } from 'react-toastify';
+import { getSizesByCategory, requiresShoeSizes } from '../utils/sizeHelper';
 
 const Add = ({ token }) => {
   const [image1, setImage1] = useState(false);
@@ -21,6 +22,34 @@ const Add = ({ token }) => {
   const [stock, setStock] = useState('');
   const [discount, setDiscount] = useState('');
   const [discountEndDate, setDiscountEndDate] = useState('');
+  const [availableSizes, setAvailableSizes] = useState(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']);
+  const [isShoeSizes, setIsShoeSizes] = useState(false);
+  const [ageGroup, setAgeGroup] = useState('adulte'); // For shoes: 'enfant' or 'adulte'
+
+  // Update available sizes when category/subcategory changes
+  useEffect(() => {
+    const isShoe = requiresShoeSizes(category, subCategory);
+    setIsShoeSizes(isShoe);
+    
+    if (isShoe) {
+      const shoeSizes = getSizesByCategory(category, subCategory);
+      setAvailableSizes(shoeSizes.adulte); // Default to adult sizes
+      setAgeGroup('adulte');
+    } else {
+      setAvailableSizes(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']);
+    }
+    
+    // Reset selected sizes when category changes
+    setSizes([]);
+  }, [category, subCategory]);
+
+  // Handle age group change for shoes
+  const handleAgeGroupChange = (group) => {
+    setAgeGroup(group);
+    const shoeSizes = getSizesByCategory(category, subCategory);
+    setAvailableSizes(shoeSizes[group]);
+    setSizes([]); // Reset selected sizes
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -198,6 +227,11 @@ const Add = ({ token }) => {
                       <option value="Topwear">Topwear</option>
                       <option value="Bottomwear">Bottomwear</option>
                       <option value="Winterwear">Winterwear</option>
+                      <option value="Shoes">Shoes</option>
+                      <option value="Sneakers">Sneakers</option>
+                      <option value="Espadrilles">Espadrilles</option>
+                      <option value="Boots">Boots</option>
+                      <option value="Sandals">Sandals</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -218,18 +252,45 @@ const Add = ({ token }) => {
 
               <Form.Group className="mb-3">
                 <Form.Label>Product Sizes</Form.Label>
-                <div className="d-flex gap-2">
-                  {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+                
+                {isShoeSizes && (
+                  <div className="mb-3">
+                    <Button
+                      variant={ageGroup === 'enfant' ? 'primary' : 'outline-secondary'}
+                      onClick={() => handleAgeGroupChange('enfant')}
+                      type="button"
+                      className="me-2"
+                    >
+                      Enfant (19-35)
+                    </Button>
+                    <Button
+                      variant={ageGroup === 'adulte' ? 'primary' : 'outline-secondary'}
+                      onClick={() => handleAgeGroupChange('adulte')}
+                      type="button"
+                    >
+                      Adulte (36-45)
+                    </Button>
+                  </div>
+                )}
+                
+                <div className="d-flex gap-2 flex-wrap">
+                  {availableSizes.map((size) => (
                     <Button
                       key={size}
                       variant={sizes.includes(size) ? 'primary' : 'outline-secondary'}
                       onClick={() => toggleSize(size)}
                       type="button"
+                      size="sm"
                     >
                       {size}
                     </Button>
                   ))}
                 </div>
+                {sizes.length === 0 && (
+                  <Form.Text className="text-danger">
+                    Veuillez sélectionner au moins une taille
+                  </Form.Text>
+                )}
               </Form.Group>
 
               <Form.Group className="mb-4">
