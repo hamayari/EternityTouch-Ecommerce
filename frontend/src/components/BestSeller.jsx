@@ -36,11 +36,6 @@ const BestSeller = () => {
     <div className='my-10'>
       <div className='text-center text-3xl py-8'>
         <Title text1={'MEILLEURES'} text2={'VENTES'}/>
-        {!loading && bestSeller.length === 0 && (
-          <p className='w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600'>
-            Nos produits les plus populaires
-          </p>
-        )}
       </div>
       
       {loading ? (
