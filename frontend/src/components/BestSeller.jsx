@@ -66,5 +66,6 @@ const BestSeller = () => {
       )}
     </div>
   );
+}
 
 export default BestSeller
