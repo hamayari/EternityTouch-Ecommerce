@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { backendUrl } from '../App'
 import { toast } from 'react-toastify';
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const Login = ({setToken}) => {
     const [email, setEmail] = useState('');
@@ -10,24 +9,16 @@ const Login = ({setToken}) => {
     const [twoFactorCode, setTwoFactorCode] = useState('');
     const [requiresTwoFactor, setRequiresTwoFactor] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { executeRecaptcha } = useGoogleReCaptcha();
 
     const onSubmitHandler = async (e) => {
         try {
             e.preventDefault();
             setLoading(true);
 
-            // Obtenir le token reCAPTCHA
-            let recaptchaToken = null;
-            if (executeRecaptcha && !requiresTwoFactor) {
-                recaptchaToken = await executeRecaptcha('admin_login');
-            }
-
             const response = await axios.post(backendUrl + '/api/user/admin', {
                 email, 
                 password,
-                twoFactorCode: requiresTwoFactor ? twoFactorCode : undefined,
-                recaptchaToken
+                twoFactorCode: requiresTwoFactor ? twoFactorCode : undefined
             });
 
             if (response.data.success) {

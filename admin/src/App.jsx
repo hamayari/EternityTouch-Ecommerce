@@ -2,7 +2,6 @@ import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 // Template components
 import AdminLayout from './layouts/AdminLayout';
@@ -33,7 +32,6 @@ export const currency = '$';
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
-  const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   
   useEffect(() => {
     localStorage.setItem('token', token);
@@ -41,10 +39,10 @@ const App = () => {
 
   if (token === '') {
     return (
-      <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"}>
+      <>
         <ToastContainer />
         <Login setToken={setToken} />
-      </GoogleReCaptchaProvider>
+      </>
     );
   }
 
