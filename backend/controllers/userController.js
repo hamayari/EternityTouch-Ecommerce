@@ -136,20 +136,22 @@ const adminLogin = async (req, res) => {
             return res.json({ success: false, message: "Email and password are required" });
         }
         
-        // Vérifier les credentials
-        if(email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD){
+        // Chercher l'admin dans la base de données
+        const adminUser = await userModel.findOne({ email, isAdmin: true });
+        
+        if (!adminUser) {
+            return res.json({ success: false, message: "Invalid credentials" });
+        }
+
+        // Vérifier le mot de passe
+        const isMatch = await bcrypt.compare(password, adminUser.password);
+        
+        if (!isMatch) {
             return res.json({ success: false, message: "Invalid credentials" });
         }
 
         // Si un code 2FA est fourni, le vérifier
         if (twoFactorCode) {
-            // Récupérer l'admin user (on utilise un user fictif pour stocker le code)
-            let adminUser = await userModel.findOne({ email: process.env.ADMIN_EMAIL });
-            
-            if (!adminUser) {
-                return res.json({ success: false, message: "2FA not initialized" });
-            }
-
             // Vérifier le code
             if (verifyTwoFactorCode(adminUser.twoFactorCode, adminUser.twoFactorExpires, twoFactorCode)) {
                 // Code valide → Générer le token SÉCURISÉ
@@ -166,38 +168,35 @@ const adminLogin = async (req, res) => {
             }
         }
 
-        // Pas de code 2FA fourni → Envoyer le code par email
-        const code = generateTwoFactorCode();
-        const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+        // Pas de code 2FA fourni → Envoyer le code par email (si 2FA activé)
+        if (adminUser.twoFactorEnabled) {
+            const code = generateTwoFactorCode();
+            const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-        // Créer ou mettre à jour l'admin user pour stocker le code
-        let adminUser = await userModel.findOne({ email: process.env.ADMIN_EMAIL });
-        
-        if (!adminUser) {
-            // Créer un user admin fictif pour stocker le code 2FA
-            adminUser = new userModel({
-                name: 'Admin',
-                email: process.env.ADMIN_EMAIL,
-                password: await bcrypt.hash(process.env.ADMIN_PASSWORD, 10),
-                twoFactorEnabled: true
-            });
+            adminUser.twoFactorCode = code;
+            adminUser.twoFactorExpires = expires;
+            await adminUser.save();
+
+            // Envoyer le code par email
+            const sent = await sendTwoFactorCode(email, code);
+
+            if (sent) {
+                return res.json({ 
+                    success: true, 
+                    requiresTwoFactor: true,
+                    message: "2FA code sent to your email" 
+                });
+            } else {
+                // Si l'email ne peut pas être envoyé, permettre la connexion sans 2FA
+                console.warn('[2FA] Email not configured, allowing login without 2FA');
+                const token = createToken(adminUser._id);
+                return res.json({ success: true, token });
+            }
         }
 
-        adminUser.twoFactorCode = code;
-        adminUser.twoFactorExpires = expires;
-        await adminUser.save();
-
-        // Envoyer le code par email
-        const sent = await sendTwoFactorCode(email, code);
-
-        if (sent) {
-            res.json({ 
-                success: true, 
-                requiresTwoFactor: true,
-                message: "2FA code sent to your email" 
-            });
-        } else {
-            // Si l'email ne peut pas être envoyé, permettre la connexion sans 2FA
+        // Pas de 2FA → Connexion directe
+        const token = createToken(adminUser._id);
+        res.json({ success: true, token });
             console.warn('[2FA] Email not configured, allowing login without 2FA');
             const token = createToken(adminUser._id);
             res.json({ success: true, token });

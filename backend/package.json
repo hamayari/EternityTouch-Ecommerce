@@ -14,6 +14,7 @@
     "server": "nodemon server.js",
     "prod": "NODE_ENV=production node server.js",
     "check-deploy": "node scripts/deploy.js",
+    "create-admin": "node scripts/createAdmin.js",
     "create-indexes": "node scripts/createIndexes.js",
     "check-indexes": "node scripts/checkIndexes.js",
     "test-tracking": "node test-tracking.js",

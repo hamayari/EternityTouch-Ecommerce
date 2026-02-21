@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     wishlist: { type: [String], default: [] }, // Array of product IDs
     profileImage: { type: String, default: '' },
     googleId: { type: String },
+    isAdmin: { type: Boolean, default: false }, // Admin flag
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
     // 2FA fields
