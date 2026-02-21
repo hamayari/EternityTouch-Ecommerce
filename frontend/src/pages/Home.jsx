@@ -15,9 +15,9 @@ const Home = () => {
   return (
     <div>
       <SEO 
-        title="Eternity Touch - Premium Fashion E-commerce"
-        description="Shop the latest fashion trends with Eternity Touch. Premium quality clothing, fast delivery, and excellent customer service."
-        keywords="fashion, clothing, e-commerce, online shopping, premium fashion, latest trends"
+        title="Eternity Touch - Votre Boutique Mode & Beauté en Ligne"
+        description="Découvrez Eternity Touch, votre destination mode et beauté en Tunisie. Collections tendance, produits de qualité, livraison dans toute la Tunisie."
+        keywords="mode tunisie, beauté tunisie, boutique en ligne, vêtements, cosmétiques, livraison tunisie, eternity touch"
       />
       <Hero/>
       
