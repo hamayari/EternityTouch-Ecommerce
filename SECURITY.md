@@ -1,21 +1,33 @@
 # Security Policy
 
-## Supported Versions
+## Reporting a Vulnerability
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+If you discover a security vulnerability, please email us at: **eternity@touch.tn**
+
+Please do NOT create a public GitHub issue for security vulnerabilities.
+
+## Security Best Practices
+
+### Environment Variables
+- Never commit `.env` files to Git
+- Use `.env.example` as a template
+- Rotate credentials regularly
+- Use strong, unique passwords
+
+### MongoDB Credentials
+⚠️ **IMPORTANT**: If you see MongoDB credentials in this repository's history, they have been rotated and are no longer valid.
+
+### Secrets Management
+- All sensitive data must be stored in environment variables
+- Use GitHub Secrets for CI/CD pipelines
+- Never hardcode credentials in source code
+
+## Supported Versions
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 1.0.x   | :white_check_mark: |
 
-## Reporting a Vulnerability
+## Security Updates
 
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+We regularly update dependencies to patch security vulnerabilities. Dependabot is enabled for automated security updates.

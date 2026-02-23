@@ -42,10 +42,10 @@ invoices/
 test-*.js
 send-test-*.js
 setup-*.js
+*-test.js
+*test*.js
+generate-*.js
 
-# Documentation files
-*.md
-!README.md
-
-# Scripts
+# Scripts folder (may contain sensitive data)
 backend/scripts/
+!backend/scripts/pre-deployment-check.js
