@@ -290,16 +290,7 @@ eternity-touch-ecommerce/
 eternity@touch.tn
 ```
 
-</td>
-<td>
 
-**📱 Phone**
-```
-+216 51 700 968
-```
-
-</td>
-<td>
 
 **🌍 Location**
 ```
